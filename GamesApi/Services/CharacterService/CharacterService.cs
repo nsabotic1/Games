@@ -1,31 +1,39 @@
 ﻿using AutoMapper;
+using GamesApi.Data;
 using GamesApi.Dtos.CharacterDtos;
 using GamesApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GamesApi.Services
 {
     public class CharacterService : ICharacterService
     {
         private readonly IMapper _mapper;
-        public List<Character> characters = new List<Character>
-        {
-            new Character(),
-            new Character
-            {
-                Id=1,
-                Name = "Ilmica"
-            }
-        };
+        private readonly DataContext _context;
 
-        public CharacterService(IMapper mapper)
+        public CharacterService(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
+            _context = context;
         }
         public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter)
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            characters.Add(_mapper.Map<Character>(newCharacter));
-            serviceResponse.Data = characters.Select(c=>_mapper.Map<GetCharacterDto>(c)).ToList();
+            try
+            {
+                _context.Characters
+                .Add(_mapper.Map<Character>(newCharacter));
+                await _context.SaveChangesAsync();
+
+                serviceResponse.Data = await _context.Characters
+                    .Select(c => _mapper.Map<GetCharacterDto>(c))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
             return serviceResponse;
         }
 
@@ -34,9 +42,14 @@ namespace GamesApi.Services
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
             try
             {
-                var character = characters.First(c => c.Id == id);
-                characters.Remove(character);
-                serviceResponse.Data = characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
+                var character = await _context.Characters
+                    .FirstAsync(c => c.Id == id);
+                _context.Characters
+                    .Remove(character);
+                await _context.SaveChangesAsync();
+                serviceResponse.Data = await _context.Characters
+                    .Select(c => _mapper.Map<GetCharacterDto>(c))
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -49,7 +62,19 @@ namespace GamesApi.Services
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacter()
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            serviceResponse.Data = characters.Select(c=>_mapper.Map<GetCharacterDto>(c)).ToList();
+            try
+            {
+                var characters = await _context.Characters
+                    .ToListAsync();
+                serviceResponse.Data = characters
+                    .Select(c => _mapper.Map<GetCharacterDto>(c))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
             return serviceResponse;
         }
 
@@ -58,7 +83,9 @@ namespace GamesApi.Services
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             try
             {
-                var character = characters.FirstOrDefault(c => c.Id == id);
+                var character = await _context
+                    .Characters
+                    .FirstOrDefaultAsync(c => c.Id == id);
                 serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
             }
             catch (Exception ex)
@@ -74,8 +101,10 @@ namespace GamesApi.Services
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             try
             {
-                var character = characters.FirstOrDefault(c => c.Id == updatedCharacter.Id);
+                var character = await _context.Characters
+                    .FirstOrDefaultAsync(c => c.Id == updatedCharacter.Id);
                 _mapper.Map(updatedCharacter, character);
+                await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
             }
             catch (Exception ex)
