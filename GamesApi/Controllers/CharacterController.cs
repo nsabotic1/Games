@@ -1,11 +1,13 @@
 ﻿using GamesApi.Dtos.CharacterDtos;
 using GamesApi.Models;
 using GamesApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamesApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CharacterController : ControllerBase
@@ -18,6 +20,7 @@ namespace GamesApi.Controllers
             _characterService = characterService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get()
         {
