@@ -59,12 +59,13 @@ namespace GamesApi.Services
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacter()
+        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacter(int userId)
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
             try
             {
                 var characters = await _context.Characters
+                    .Where(c=>c.User.Id==userId)
                     .ToListAsync();
                 serviceResponse.Data = characters
                     .Select(c => _mapper.Map<GetCharacterDto>(c))

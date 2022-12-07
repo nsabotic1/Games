@@ -4,6 +4,7 @@ using GamesApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GamesApi.Controllers
 {
@@ -20,11 +21,13 @@ namespace GamesApi.Controllers
             _characterService = characterService;
         }
 
-        [AllowAnonymous]
+        
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get()
         {
-            return Ok(await _characterService.GetAllCharacter());
+            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            return Ok(await _characterService.GetAllCharacter(userId));
         }
 
         [HttpGet("{id}")]
