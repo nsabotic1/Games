@@ -29,5 +29,16 @@ namespace GamesApi.Controllers
             }
             return Ok(serviceResponse);
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<ServiceResponse<string>>> Logi(UserLoginDto request)
+        {
+            var serviceResponse = await _authService.Login(request.UserName, request.Password);
+            if (!serviceResponse.Success)
+            {
+                return BadRequest(serviceResponse);
+            }
+            return Ok(serviceResponse);
+        }
     }
 }

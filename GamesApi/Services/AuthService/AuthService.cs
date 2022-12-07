@@ -15,9 +15,27 @@ namespace GamesApi.Services.AuthService
             _context = context;
             _passwordHash = passwordHash;
         }
-        public Task<ServiceResponse<string>> Login(User user, string password)
+        public async Task<ServiceResponse<string>> Login(string username, string password)
         {
-            throw new NotImplementedException();
+            var serviceResponse = new ServiceResponse<string>();
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username.ToLower().Equals(username.ToLower()));
+            if(user== null)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "User not found!";
+            }
+            else if (!_passwordHash.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "Wrong password!";
+            }
+            else
+            {
+                serviceResponse.Data = user.Id.ToString();
+            }
+
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
@@ -29,7 +47,7 @@ namespace GamesApi.Services.AuthService
                 serviceResponse.Message = "User already exists!";
                 return serviceResponse;
             }
-            _passwordHash.createPasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+            _passwordHash.CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             _context.Users.Add(user);
