@@ -10,8 +10,10 @@ namespace GamesApi
         {
             CreateMap<Character, GetCharacterDto>();
             CreateMap<AddCharacterDto, Character>();
+            CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
             CreateMap<UpdateCharacterDto, Character>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+           .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<RpgClass?, RpgClass>().ConvertUsing((src, dest) => src ?? dest);
         }
     }
 }

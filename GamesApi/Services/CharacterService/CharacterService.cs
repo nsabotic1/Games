@@ -106,6 +106,7 @@ namespace GamesApi.Services
                 _mapper.Map(updatedCharacter, character);
                 await _context.SaveChangesAsync();
                 serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
+                serviceResponse.Message = "Your character has been updated !";
             }
             catch (Exception ex)
             {
