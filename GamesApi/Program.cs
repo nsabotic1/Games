@@ -1,5 +1,7 @@
 using GamesApi.Data;
+using GamesApi.Helpers;
 using GamesApi.Services;
+using GamesApi.Services.AuthService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ICharacterService, CharacterService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<IPasswordHash, PasswordHash>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
