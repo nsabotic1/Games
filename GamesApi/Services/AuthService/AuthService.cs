@@ -32,7 +32,7 @@ namespace GamesApi.Services.AuthService
             }
             else
             {
-                serviceResponse.Data = user.Id.ToString();
+                serviceResponse.Data = _passwordHash.CreateToken(user);
             }
 
             return serviceResponse;
