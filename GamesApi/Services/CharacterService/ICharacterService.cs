@@ -5,10 +5,10 @@ namespace GamesApi.Services
 {
     public interface ICharacterService
     {
-        public Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacter();
-        public Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id);
-        public Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter);
-        public Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updatedCharacter);
-        public Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id);
+        Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacter();
+        Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id);
+        Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter);
+        Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updatedCharacter);
+        Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id);
     }
 }
