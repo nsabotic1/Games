@@ -20,28 +20,25 @@ namespace GamesApi.Services.WeaponService
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
-        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         public async Task<ServiceResponse<GetCharacterDto>> AddWeapon(AddWeaponDto newWeapon)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             try
             {
+                var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
                 var character = await _context.Characters
-                    .FirstOrDefaultAsync(c => c.Id == newWeapon.CharacterId && c.User.Id == GetUserId());
-                if (character != null)
-                {
-                    character.Weapon = _mapper.Map<Weapon>(newWeapon);
-                    _context.Weapons.Add(character.Weapon);
-                    await _context.SaveChangesAsync();
-                    serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
-                   
-                }
-                else
+                    .FirstOrDefaultAsync(c => c.Id == newWeapon.CharacterId && c.User.Id == userId);
+                if (character == null)
                 {
                     serviceResponse.Success = false;
                     serviceResponse.Message = "Character not found";
                     return serviceResponse;
                 }
+
+                character.Weapon = _mapper.Map<Weapon>(newWeapon);
+                _context.Weapons.Add(character.Weapon);
+                await _context.SaveChangesAsync();
+                serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
             }
             catch (Exception ex)
             {
