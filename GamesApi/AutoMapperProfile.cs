@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GamesApi.Dtos.CharacterDtos;
+using GamesApi.Dtos.SkillDtos;
 using GamesApi.Dtos.WeaponDtos;
 using GamesApi.Models;
 
@@ -18,6 +19,8 @@ namespace GamesApi
 
             CreateMap<AddWeaponDto, Weapon>();
             CreateMap<Weapon, GetWeaponDto>();
+
+            CreateMap<Skill, GetSkillDto>();
         }
     }
 }

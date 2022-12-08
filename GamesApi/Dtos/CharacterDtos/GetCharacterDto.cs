@@ -1,4 +1,5 @@
-﻿using GamesApi.Dtos.WeaponDtos;
+﻿using GamesApi.Dtos.SkillDtos;
+using GamesApi.Dtos.WeaponDtos;
 using GamesApi.Models;
 
 namespace GamesApi.Dtos.CharacterDtos
@@ -13,5 +14,7 @@ namespace GamesApi.Dtos.CharacterDtos
         public int Intelligence { get; set; }
         public RpgClass Class { get; set; }
         public GetWeaponDto Weapon { get; set; }
+
+        public List<GetSkillDto> Skills { get; set; }
     }
 }
