@@ -14,6 +14,83 @@ namespace GamesApi.Services.FightService
             _context = context;
         }
 
+        public async Task<ServiceResponse<FightResultDto>> Fight(FightRequestDto request)
+        {
+            var serviceResponse = new ServiceResponse<FightResultDto>
+            {
+                Data = new FightResultDto()
+            };
+            
+            try
+            {
+                var characters = await _context.Characters
+                    .Include(c => c.Weapon)
+                    .Include(c => c.Skills)
+                    .Where(c => request.CharacterIds.Contains(c.Id)).ToListAsync();
+
+                Boolean defeated = false;
+                while (!defeated)
+                {
+                    foreach(var attacker in characters)
+                    {
+                        var opponents = characters.Where(c=>c.Id != attacker.Id).ToList();
+                        var index = new Random().Next(opponents.Count);
+                        var opponent = opponents[index]; //generate a random opponent
+
+                        int damage = 0;
+                        string attackUsed = string.Empty;
+
+                        bool useWeapon = new Random().Next(2) == 0;
+
+                        if (useWeapon) //if the line 39 equals 0
+                        {
+                            attackUsed = attacker.Weapon.Name;
+
+                            damage = attacker.Weapon.Damage + new Random().Next(attacker.Strength);
+                            damage -= new Random().Next(opponent.Defence);
+
+                            if (damage > 0) opponent.HitPoints -= damage;
+
+                        }
+                        else
+                        {
+                            var index1 = new Random().Next(attacker.Skills.Count);
+                            var skill = attacker.Skills[index1];
+                            attackUsed = skill.Name;
+                            damage = skill.Damage + new Random().Next(attacker.Intelligence);
+                            damage -= new Random().Next(opponent.Defence);
+
+                            if (damage > 0) opponent.HitPoints -= damage;
+                        }
+                        serviceResponse.Data.Log
+                           .Add($"{attacker.Name} attacks {opponent.Name} using {attackUsed} with {(damage >= 0 ? damage : 0)} damage.");
+                        if (opponent.HitPoints <= 0)
+                        {
+                            defeated = true;
+                            attacker.Victories++;
+                            opponent.Defeats++;
+                            serviceResponse.Data.Log.Add($"{opponent.Name} has been defeated!");
+                            serviceResponse.Data.Log.Add($"{attacker.Name} wins with {attacker.HitPoints} HP left!");
+                            break;
+                        }
+                    }
+                }
+                characters.ForEach(c =>
+                {
+                    c.Fights++;
+                    c.HitPoints = 100;
+                });
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<AttackResultDto>> SkillAttack(SkillAttackDto request)
         {
             var serviceResponse = new ServiceResponse<AttackResultDto>();
