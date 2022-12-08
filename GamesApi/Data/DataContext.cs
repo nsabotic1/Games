@@ -13,5 +13,11 @@ namespace GamesApi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Weapon> Weapons { get; set; }
         public DbSet<Skill> Skills { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            SeedData.OnModelCreating(modelBuilder);
+
+        }
     }
 }
