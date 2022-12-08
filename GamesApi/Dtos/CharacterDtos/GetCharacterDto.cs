@@ -14,7 +14,9 @@ namespace GamesApi.Dtos.CharacterDtos
         public int Intelligence { get; set; }
         public RpgClass Class { get; set; }
         public GetWeaponDto Weapon { get; set; }
-
         public List<GetSkillDto> Skills { get; set; }
+        public int Fights { get; set; }
+        public int Victories { get; set; }
+        public int Defeats { get; set; }
     }
 }
