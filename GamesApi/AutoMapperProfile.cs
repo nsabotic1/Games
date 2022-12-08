@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GamesApi.Dtos.CharacterDtos;
+using GamesApi.Dtos.FightDtos;
 using GamesApi.Dtos.SkillDtos;
 using GamesApi.Dtos.WeaponDtos;
 using GamesApi.Models;
@@ -12,6 +13,7 @@ namespace GamesApi
         {
             CreateMap<Character, GetCharacterDto>();
             CreateMap<AddCharacterDto, Character>();
+            CreateMap<Character, HighScoreDto>();
             CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
             CreateMap<UpdateCharacterDto, Character>()
            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

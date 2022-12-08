@@ -1,4 +1,5 @@
-﻿using GamesApi.Data;
+﻿using AutoMapper;
+using GamesApi.Data;
 using GamesApi.Dtos.FightDtos;
 using GamesApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace GamesApi.Services.FightService
     public class FightService : IFightService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public FightService(DataContext context)
+        public FightService(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<ServiceResponse<FightResultDto>> Fight(FightRequestDto request)
@@ -88,6 +91,20 @@ namespace GamesApi.Services.FightService
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
             }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<HighScoreDto>>> GetHighScore()
+        {
+            var serviceResponse = new ServiceResponse<List<HighScoreDto>>();
+            var characters = await _context.Characters
+               .Where(c => c.Fights > 0)
+               .OrderByDescending(c => c.Victories)
+               .ThenBy(c => c.Defeats)
+               .ToListAsync();
+
+            serviceResponse.Data = characters.Select(c => _mapper.Map<HighScoreDto>(c)).ToList();
+    
             return serviceResponse;
         }
 
