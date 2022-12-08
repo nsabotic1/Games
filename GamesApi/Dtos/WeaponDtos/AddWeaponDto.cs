@@ -1,11 +1,9 @@
-﻿namespace GamesApi.Models
+﻿namespace GamesApi.Dtos.WeaponDtos
 {
-    public class Weapon
+    public class AddWeaponDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Damage { get; set; }
         public int CharacterId { get; set; }
-        public Character Character { get; set; }
     }
 }

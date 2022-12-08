@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GamesApi.Dtos.CharacterDtos;
+using GamesApi.Dtos.WeaponDtos;
 using GamesApi.Models;
 
 namespace GamesApi
@@ -14,6 +15,9 @@ namespace GamesApi
             CreateMap<UpdateCharacterDto, Character>()
            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RpgClass?, RpgClass>().ConvertUsing((src, dest) => src ?? dest);
+
+            CreateMap<AddWeaponDto, Weapon>();
+            CreateMap<Weapon, GetWeaponDto>();
         }
     }
 }

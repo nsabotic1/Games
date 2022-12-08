@@ -1,4 +1,5 @@
-﻿using GamesApi.Models;
+﻿using GamesApi.Dtos.WeaponDtos;
+using GamesApi.Models;
 
 namespace GamesApi.Dtos.CharacterDtos
 {
@@ -11,5 +12,6 @@ namespace GamesApi.Dtos.CharacterDtos
         public int Defence { get; set; } 
         public int Intelligence { get; set; }
         public RpgClass Class { get; set; }
+        public GetWeaponDto Weapon { get; set; }
     }
 }
