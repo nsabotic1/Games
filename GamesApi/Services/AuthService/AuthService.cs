@@ -8,9 +8,9 @@ namespace GamesApi.Services.AuthService
     public class AuthService : IAuthService
     {
         private readonly DataContext _context;
-        private readonly IPasswordHash _passwordHash;
+        private readonly IHelperMethods _passwordHash;
 
-        public AuthService(DataContext context, IPasswordHash passwordHash)
+        public AuthService(DataContext context, IHelperMethods passwordHash)
         {
             _context = context;
             _passwordHash = passwordHash;

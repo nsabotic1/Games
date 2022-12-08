@@ -5,11 +5,11 @@ using System.Security.Claims;
 
 namespace GamesApi.Helpers
 {
-    public class PasswordHash : IPasswordHash
+    public class HelperMethods : IHelperMethods
     {
         private readonly IConfiguration _configuration;
 
-        public PasswordHash(IConfiguration configuration)
+        public HelperMethods(IConfiguration configuration)
         {
             _configuration = configuration;
         }
