@@ -2,7 +2,7 @@
 -------------------------
 This application allows the user to add characters and give them certain skills and weapons. Also, characters can fight each other. Before that, the user must register. Then, when he logs in, he will receive a token that serves for authentication. After that, the user can access all CRUD operations for characters.
 
-## Run and build
+## Run and build (in Visual Studio)
 
 * Install .NET 6 SDK.
 * Install the following packages:
